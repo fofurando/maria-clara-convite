@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convite 15 Anos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Baloo+2:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --rose-gold: #E5B299;
+            --gold-metallic: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+            --rosa-quartz: rgba(255, 182, 193, 0.6);
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            font-family: 'Baloo 2', cursive;
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .main-container {
+            position: relative;
+            width: 100%; max-width: 450px;
+            height: 100vh;
+            background: #121212;
+        }
+
+        /* TELA 1: ENVELOPE */
+        #startScreen {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: url('envelope.png') center/cover no-repeat;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 50; cursor: pointer;
+        }
+
+        /* BOTÃO DE SOM SOFISTICADO (ROSA + FLOR) */
+        #soundAlert {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--rosa-quartz);
+            backdrop-filter: blur(5px);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1.5px solid var(--rose-gold);
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 60;
+            display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 0 15px rgba(229, 178, 153, 0.4);
+            animation: pulseRosa 2s infinite;
+        }
+
+        @keyframes pulseRosa {
+            0% { box-shadow: 0 0 0 0px rgba(229, 178, 153, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(229, 178, 153, 0); }
+            100% { box-shadow: 0 0 0 0px rgba(229, 178, 153, 0); }
+        }
+
+        /* TEXTO TOQUE PARA ABRIR (BIRTHSTONE DOURADO) */
+        .tap-text {
+            position: absolute;
+            bottom: 15%;
+            font-family: 'Birthstone', cursive;
+            font-size: 52px;
+            background: var(--gold-metallic);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: suaveBlink 2s infinite;
+        }
+
+        @keyframes suaveBlink { 0%, 100% { opacity: 1; filter: brightness(1); } 50% { opacity: 0.8; filter: brightness(1.2); } }
+
+        video, .bg-img {
+            position: absolute;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 10;
+        }
+
+        .fade-out { animation: fadeOutAnim 0.6s forwards; }
+        .fade-in { display: block !important; animation: fadeInAnim 0.5s forwards; }
+
+        @keyframes fadeOutAnim { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes fadeInAnim { from { opacity: 0; } to { opacity: 1; } }
+
+        #screenConvite, #screenPresentes {
+            display: none;
+            position: absolute;
+            width: 100%; height: 100%;
+            opacity: 0;
+            z-index: 20;
+        }
+
+        .btn-invisible {
+            position: absolute; 
+            z-index: 100;
+            background: transparent; 
+            border: none; 
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- POSIÇÕES CALCULADAS (Base 1080x1920) --- */
+        /* Botões Principais: Tamanho 163.3px (15.12% w, 8.50% h) */
+        .pos-confirmar { width: 15.12%; height: 8.50%; left: 24.84%; top: 64.17%; }
+        .pos-mapa { width: 15.12%; height: 8.50%; left: 42.42%; top: 64.17%; }
+        .pos-presentes { width: 15.12%; height: 8.50%; left: 60.03%; top: 64.17%; }
+
+        /* Botão Voltar: 162x116.7px (15% w, 6.07% h) na posição x:225.6 y:990.9 */
+        .pos-voltar { width: 15.00%; height: 6.07%; left: 20.88%; top: 51.60%; }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        
+        <div id="soundAlert">🌸 LIGUE O SOM!</div>
+
+        <div id="startScreen" onclick="iniciar()">
+            <div class="tap-text">Toque para abrir</div>
+        </div>
+
+        <video id="videoIntro" src="video01.mp4" playsinline></video>
+
+        <div id="screenConvite">
+            <img src="convite.png" class="bg-img">
+            <button class="btn-invisible pos-confirmar" onclick="confirmar()"></button>
+            <button class="btn-invisible pos-mapa" onclick="abrirMapa()"></button>
+            <button class="btn-invisible pos-presentes" onclick="mostrarPresentes()"></button>
+        </div>
+
+        <div id="screenPresentes">
+            <img src="presentes.png" class="bg-img">
+            <button class="btn-invisible pos-voltar" onclick="voltar()"></button>
+        </div>
+
+    </div>
+
+    <script>
+        const vIntro = document.getElementById('videoIntro');
+        const screenConvite = document.getElementById('screenConvite');
+        const screenPresentes = document.getElementById('screenPresentes');
+
+        function iniciar() {
+            document.getElementById('startScreen').classList.add('fade-out');
+            document.getElementById('soundAlert').style.display = 'none';
+            setTimeout(() => {
+                document.getElementById('startScreen').style.display = 'none';
+                vIntro.play();
+            }, 600);
+        }
+
+        vIntro.onended = function() {
+            vIntro.classList.add('fade-out');
+            setTimeout(() => {
+                vIntro.style.display = 'none';
+                screenConvite.classList.add('fade-in');
+            }, 500);
+        };
+
+        function mostrarPresentes() {
+            screenConvite.style.display = 'none';
+            screenPresentes.classList.add('fade-in');
+        }
+
+        function voltar() {
+            screenPresentes.style.display = 'none';
+            screenPresentes.classList.remove('fade-in');
+            screenConvite.style.display = 'block';
+            screenConvite.style.opacity = '1';
+        }
+
+        function abrirMapa() { window.open("https://maps.app.goo.gl/e9Xq5UvrqaSTzY328"); }
+        function confirmar() { window.open("https://wa.link/fmhy6a"); }
+        
+    </script>
+</body>
+</html>
