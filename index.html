@@ -30,19 +30,7 @@
             overflow: hidden;
         }
 
-        .selo-protecao {
-            position: absolute;
-            width: 80px; height: 80px;
-            background: url('selo.png') center/contain no-repeat;
-            opacity: 0.15;
-            z-index: 50;
-            pointer-events: none;
-            display: none;
-        }
-
-        .selo-top-right { top: 20px; right: 20px; }
-        .selo-bottom-left { bottom: 20px; left: 20px; }
-
+        /* ABERTURA */
         #startScreen {
             position: absolute;
             width: 100%; height: 100%;
@@ -119,7 +107,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- BOTÕES TELA CONVITE ATUALIZADOS --- */
+        /* --- BOTÕES TELA CONVITE (189.3px) --- */
         .pos-confirmar { width: 17.53%; height: 9.86%; left: 23.64%; top: 63.49%; }
         .pos-mapa { width: 17.53%; height: 9.86%; left: 41.84%; top: 63.49%; }
         .pos-presentes { width: 17.53%; height: 9.86%; left: 60.04%; top: 63.49%; }
@@ -160,20 +148,25 @@
         const musica = document.getElementById('musicaFundo');
         const screenConvite = document.getElementById('screenConvite');
         const screenPresentes = document.getElementById('screenPresentes');
-        const selos = document.querySelectorAll('.selo-protecao');
 
         function iniciar() {
             musica.volume = 0.18;
             vIntro.volume = 1.0; 
-            musica.play().catch(e => console.log("Erro áudio"));
+            
+            musica.play().catch(e => console.log("Áudio aguardando..."));
+            
             vIntro.muted = false; 
-            vIntro.play().catch(e => { vIntro.muted = true; vIntro.play(); });
+            vIntro.play().catch(e => {
+                vIntro.muted = true;
+                vIntro.play();
+            });
 
             document.getElementById('startScreen').classList.add('fade-out');
             document.getElementById('soundAlert').style.display = 'none';
-            selos.forEach(s => s.style.display = 'block');
 
-            setTimeout(() => { document.getElementById('startScreen').style.display = 'none'; }, 800);
+            setTimeout(() => {
+                document.getElementById('startScreen').style.display = 'none';
+            }, 800);
         }
 
         vIntro.onended = function() {
