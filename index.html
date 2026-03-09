@@ -10,7 +10,7 @@
         :root {
             --rose-gold: #E5B299;
             --gold-metallic: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
-            --rosa-quartz: rgba(255, 182, 193, 0.6);
+            --rosa-quartz: rgba(255, 182, 193, 0.7);
         }
 
         body, html {
@@ -29,6 +29,21 @@
             background: #121212;
         }
 
+        /* --- ESTILO DOS SELOS (PROTEÇÃO) --- */
+        .selo-protecao {
+            position: absolute;
+            width: 80px; /* Tamanho pequeno dos selos */
+            height: 80px;
+            background: url('selo.png') center/contain no-repeat;
+            opacity: 0.15; /* Transparência de 15% */
+            z-index: 95;
+            pointer-events: none;
+            display: none; /* Aparece após o "iniciar" */
+        }
+
+        .selo-top-right { top: 20px; right: 20px; }
+        .selo-bottom-left { bottom: 20px; left: 20px; }
+
         /* TELA 1: ENVELOPE */
         #startScreen {
             position: absolute;
@@ -39,46 +54,44 @@
             z-index: 50; cursor: pointer;
         }
 
-        /* BOTÃO DE SOM SOFISTICADO (ROSA + FLOR) */
+        /* BOTÃO DE SOM SOFISTICADO */
         #soundAlert {
             position: absolute;
             top: 40px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--rosa-quartz);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
             color: #fff;
-            padding: 10px 20px;
+            padding: 10px 25px;
             border-radius: 30px;
             border: 1.5px solid var(--rose-gold);
             font-size: 14px;
             font-weight: bold;
             z-index: 60;
             display: flex; align-items: center; gap: 8px;
-            box-shadow: 0 0 15px rgba(229, 178, 153, 0.4);
             animation: pulseRosa 2s infinite;
         }
 
         @keyframes pulseRosa {
-            0% { box-shadow: 0 0 0 0px rgba(229, 178, 153, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(229, 178, 153, 0); }
-            100% { box-shadow: 0 0 0 0px rgba(229, 178, 153, 0); }
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
         }
 
-        /* TEXTO TOQUE PARA ABRIR (BIRTHSTONE DOURADO) */
+        /* TEXTO TOQUE PARA ABRIR */
         .tap-text {
             position: absolute;
             bottom: 15%;
             font-family: 'Birthstone', cursive;
-            font-size: 52px;
+            font-size: 58px;
             background: var(--gold-metallic);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            animation: suaveBlink 2s infinite;
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+            animation: suaveBlink 2.5s infinite;
         }
 
-        @keyframes suaveBlink { 0%, 100% { opacity: 1; filter: brightness(1); } 50% { opacity: 0.8; filter: brightness(1.2); } }
+        @keyframes suaveBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
         video, .bg-img {
             position: absolute;
@@ -87,8 +100,8 @@
             z-index: 10;
         }
 
-        .fade-out { animation: fadeOutAnim 0.6s forwards; }
-        .fade-in { display: block !important; animation: fadeInAnim 0.5s forwards; }
+        .fade-out { animation: fadeOutAnim 0.8s forwards; }
+        .fade-in { display: block !important; animation: fadeInAnim 0.6s forwards; }
 
         @keyframes fadeOutAnim { from { opacity: 1; } to { opacity: 0; } }
         @keyframes fadeInAnim { from { opacity: 0; } to { opacity: 1; } }
@@ -110,21 +123,25 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- POSIÇÕES CALCULADAS (Base 1080x1920) --- */
-        /* Botões Principais: Tamanho 163.3px (15.12% w, 8.50% h) */
+        /* --- BOTÕES TELA CONVITE --- */
         .pos-confirmar { width: 15.12%; height: 8.50%; left: 24.84%; top: 64.17%; }
         .pos-mapa { width: 15.12%; height: 8.50%; left: 42.42%; top: 64.17%; }
         .pos-presentes { width: 15.12%; height: 8.50%; left: 60.03%; top: 64.17%; }
 
-        /* Botão Voltar: 162x116.7px (15% w, 6.07% h) na posição x:225.6 y:990.9 */
+        /* --- BOTÃO VOLTAR --- */
         .pos-voltar { width: 15.00%; height: 6.07%; left: 20.88%; top: 51.60%; }
 
     </style>
 </head>
 <body>
 
+    <audio id="musicaFundo" src="musica.mp3" loop></audio>
+    
     <div class="main-container">
         
+        <div class="selo-protecao selo-top-right"></div>
+        <div class="selo-protecao selo-bottom-left"></div>
+
         <div id="soundAlert">🌸 LIGUE O SOM!</div>
 
         <div id="startScreen" onclick="iniciar()">
@@ -149,16 +166,24 @@
 
     <script>
         const vIntro = document.getElementById('videoIntro');
+        const musica = document.getElementById('musicaFundo');
         const screenConvite = document.getElementById('screenConvite');
         const screenPresentes = document.getElementById('screenPresentes');
+        const selos = document.querySelectorAll('.selo-protecao');
 
         function iniciar() {
             document.getElementById('startScreen').classList.add('fade-out');
             document.getElementById('soundAlert').style.display = 'none';
+            
+            musica.play().catch(e => console.log("Aguardando interação"));
+            
+            // Mostra todos os selos
+            selos.forEach(s => s.style.display = 'block');
+
             setTimeout(() => {
                 document.getElementById('startScreen').style.display = 'none';
                 vIntro.play();
-            }, 600);
+            }, 800);
         }
 
         vIntro.onended = function() {
@@ -166,7 +191,7 @@
             setTimeout(() => {
                 vIntro.style.display = 'none';
                 screenConvite.classList.add('fade-in');
-            }, 500);
+            }, 600);
         };
 
         function mostrarPresentes() {
