@@ -27,18 +27,19 @@
             width: 100%; max-width: 450px;
             height: 100vh;
             background: #121212;
+            overflow: hidden;
         }
 
-        /* --- ESTILO DOS SELOS (PROTEÇÃO) --- */
+        /* --- ESTILO DOS SELOS --- */
         .selo-protecao {
             position: absolute;
-            width: 80px; /* Tamanho pequeno dos selos */
+            width: 80px;
             height: 80px;
             background: url('selo.png') center/contain no-repeat;
-            opacity: 0.15; /* Transparência de 15% */
+            opacity: 0.15;
             z-index: 95;
             pointer-events: none;
-            display: none; /* Aparece após o "iniciar" */
+            display: none;
         }
 
         .selo-top-right { top: 20px; right: 20px; }
@@ -51,10 +52,9 @@
             background: url('envelope.png') center/cover no-repeat;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            z-index: 50; cursor: pointer;
+            z-index: 100; cursor: pointer;
         }
 
-        /* BOTÃO DE SOM SOFISTICADO */
         #soundAlert {
             position: absolute;
             top: 40px;
@@ -68,7 +68,7 @@
             border: 1.5px solid var(--rose-gold);
             font-size: 14px;
             font-weight: bold;
-            z-index: 60;
+            z-index: 110;
             display: flex; align-items: center; gap: 8px;
             animation: pulseRosa 2s infinite;
         }
@@ -78,7 +78,6 @@
             50% { transform: translateX(-50%) scale(1.05); }
         }
 
-        /* TEXTO TOQUE PARA ABRIR */
         .tap-text {
             position: absolute;
             bottom: 15%;
@@ -116,7 +115,7 @@
 
         .btn-invisible {
             position: absolute; 
-            z-index: 100;
+            z-index: 120;
             background: transparent; 
             border: none; 
             cursor: pointer;
@@ -124,12 +123,10 @@
         }
 
         /* --- BOTÕES TELA CONVITE --- */
-        .pos-confirmar { width: 15.12%; height: 8.50%; left: 24.84%; top: 64.17%; }
-        .pos-mapa { width: 15.12%; height: 8.50%; left: 42.42%; top: 64.17%; }
-        .pos-presentes { width: 15.12%; height: 8.50%; left: 60.03%; top: 64.17%; }
-
-        /* --- BOTÃO VOLTAR --- */
-        .pos-voltar { width: 15.00%; height: 6.07%; left: 20.88%; top: 51.60%; }
+        .pos-confirmar { width: 15%; height: 8%; left: 25%; top: 64%; }
+        .pos-mapa { width: 15%; height: 8%; left: 42%; top: 64%; }
+        .pos-presentes { width: 15%; height: 8%; left: 60%; top: 64%; }
+        .pos-voltar { width: 15%; height: 6%; left: 21%; top: 51.6%; }
 
     </style>
 </head>
@@ -148,7 +145,7 @@
             <div class="tap-text">Toque para abrir</div>
         </div>
 
-        <video id="videoIntro" src="video.mp4" playsinline></video>
+        <video id="videoIntro" src="video.mp4" playsinline muted preload="auto"></video>
 
         <div id="screenConvite">
             <img src="convite.png" class="bg-img">
@@ -172,17 +169,20 @@
         const selos = document.querySelectorAll('.selo-protecao');
 
         function iniciar() {
+            // Inicia o som
+            musica.play().catch(e => console.log("Áudio bloqueado ou não encontrado"));
+            
+            // Inicia o vídeo (com muted ele sempre vai rodar)
+            vIntro.play().catch(e => console.log("Erro ao rodar vídeo"));
+
             document.getElementById('startScreen').classList.add('fade-out');
             document.getElementById('soundAlert').style.display = 'none';
             
-            musica.play().catch(e => console.log("Aguardando interação"));
-            
-            // Mostra todos os selos
+            // Mostra os selos
             selos.forEach(s => s.style.display = 'block');
 
             setTimeout(() => {
                 document.getElementById('startScreen').style.display = 'none';
-                vIntro.play();
             }, 800);
         }
 
@@ -196,6 +196,7 @@
 
         function mostrarPresentes() {
             screenConvite.style.display = 'none';
+            screenPresentes.classList.remove('fade-out');
             screenPresentes.classList.add('fade-in');
         }
 
@@ -206,7 +207,7 @@
             screenConvite.style.opacity = '1';
         }
 
-        function abrirMapa() { window.open("https://maps.app.goo.gl/e9Xq5UvrqaSTzY328"); }
+        function abrirMapa() { window.open("https://www.google.com/maps"); } // Ajuste o link real aqui
         function confirmar() { window.open("https://wa.link/fmhy6a"); }
         
     </script>
