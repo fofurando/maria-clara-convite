@@ -30,13 +30,12 @@
             overflow: hidden;
         }
 
-        /* SELO ATRÁS DOS BOTÕES */
         .selo-protecao {
             position: absolute;
             width: 80px; height: 80px;
             background: url('selo.png') center/contain no-repeat;
             opacity: 0.15;
-            z-index: 50; /* Selo abaixo dos botões */
+            z-index: 50;
             pointer-events: none;
             display: none;
         }
@@ -113,19 +112,19 @@
 
         .btn-invisible {
             position: absolute; 
-            z-index: 80; /* Botões acima do selo e da mídia */
+            z-index: 80;
             background: rgba(255,255,255,0);
             border: none; 
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- BOTÕES TELA CONVITE (MANTIDOS) --- */
-        .pos-confirmar { width: 15.12%; height: 8.50%; left: 24.84%; top: 64.17%; }
-        .pos-mapa { width: 15.12%; height: 8.50%; left: 42.42%; top: 64.17%; }
-        .pos-presentes { width: 15.12%; height: 8.50%; left: 60.03%; top: 64.17%; }
+        /* --- BOTÕES TELA CONVITE ATUALIZADOS --- */
+        .pos-confirmar { width: 17.53%; height: 9.86%; left: 23.64%; top: 63.49%; }
+        .pos-mapa { width: 17.53%; height: 9.86%; left: 41.84%; top: 63.49%; }
+        .pos-presentes { width: 17.53%; height: 9.86%; left: 60.04%; top: 63.49%; }
 
-        /* --- BOTÃO VOLTAR (MANTIDO) --- */
+        /* --- BOTÃO VOLTAR --- */
         .pos-voltar { width: 15.00%; height: 6.07%; left: 20.88%; top: 51.60%; }
 
     </style>
@@ -135,10 +134,8 @@
     <audio id="musicaFundo" src="musica.mp3" loop></audio>
     
     <div class="main-container">
-        
         <div class="selo-protecao selo-top-right"></div>
         <div class="selo-protecao selo-bottom-left"></div>
-
         <div id="soundAlert">🌸 LIGUE O SOM!</div>
 
         <div id="startScreen" onclick="iniciar()">
@@ -158,7 +155,6 @@
             <img src="presentes.png" class="bg-img">
             <button class="btn-invisible pos-voltar" onclick="voltar()"></button>
         </div>
-
     </div>
 
     <script>
@@ -171,22 +167,15 @@
         function iniciar() {
             musica.volume = 0.18;
             vIntro.volume = 1.0; 
-            
-            musica.play().catch(e => console.log("Erro áudio:", e));
-            
+            musica.play().catch(e => console.log("Erro áudio"));
             vIntro.muted = false; 
-            vIntro.play().catch(e => {
-                vIntro.muted = true;
-                vIntro.play();
-            });
+            vIntro.play().catch(e => { vIntro.muted = true; vIntro.play(); });
 
             document.getElementById('startScreen').classList.add('fade-out');
             document.getElementById('soundAlert').style.display = 'none';
             selos.forEach(s => s.style.display = 'block');
 
-            setTimeout(() => {
-                document.getElementById('startScreen').style.display = 'none';
-            }, 800);
+            setTimeout(() => { document.getElementById('startScreen').style.display = 'none'; }, 800);
         }
 
         vIntro.onended = function() {
@@ -211,7 +200,6 @@
 
         function abrirMapa() { window.open("https://maps.app.goo.gl/e9Xq5UvrqaSTzY328"); }
         function confirmar() { window.open("https://wa.link/fmhy6a"); }
-        
     </script>
 </body>
 </html>
