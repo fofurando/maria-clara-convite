@@ -30,11 +30,9 @@
             overflow: hidden;
         }
 
-        /* --- ESTILO DOS SELOS --- */
         .selo-protecao {
             position: absolute;
-            width: 80px;
-            height: 80px;
+            width: 80px; height: 80px;
             background: url('selo.png') center/contain no-repeat;
             opacity: 0.15;
             z-index: 95;
@@ -45,14 +43,13 @@
         .selo-top-right { top: 20px; right: 20px; }
         .selo-bottom-left { bottom: 20px; left: 20px; }
 
-        /* TELA 1: ENVELOPE */
         #startScreen {
             position: absolute;
             width: 100%; height: 100%;
             background: url('envelope.png') center/cover no-repeat;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            z-index: 100; cursor: pointer;
+            z-index: 150; cursor: pointer;
         }
 
         #soundAlert {
@@ -68,7 +65,7 @@
             border: 1.5px solid var(--rose-gold);
             font-size: 14px;
             font-weight: bold;
-            z-index: 110;
+            z-index: 160;
             display: flex; align-items: center; gap: 8px;
             animation: pulseRosa 2s infinite;
         }
@@ -115,18 +112,18 @@
 
         .btn-invisible {
             position: absolute; 
-            z-index: 120;
-            background: transparent; 
+            z-index: 200; /* Garantindo que fique acima de tudo */
+            background: rgba(255,255,255,0); /* Totalmente transparente */
             border: none; 
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- BOTÕES TELA CONVITE --- */
-        .pos-confirmar { width: 15%; height: 8%; left: 25%; top: 64%; }
-        .pos-mapa { width: 15%; height: 8%; left: 42%; top: 64%; }
-        .pos-presentes { width: 15%; height: 8%; left: 60%; top: 64%; }
-        .pos-voltar { width: 15%; height: 6%; left: 21%; top: 51.6%; }
+        /* Ajuste das áreas de clique */
+        .pos-confirmar { width: 16%; height: 10%; left: 24%; top: 63%; }
+        .pos-mapa { width: 16%; height: 10%; left: 42%; top: 63%; }
+        .pos-presentes { width: 16%; height: 10%; left: 60%; top: 63%; }
+        .pos-voltar { width: 18%; height: 8%; left: 20%; top: 51%; }
 
     </style>
 </head>
@@ -169,16 +166,24 @@
         const selos = document.querySelectorAll('.selo-protecao');
 
         function iniciar() {
-            // Inicia o som
-            musica.play().catch(e => console.log("Áudio bloqueado ou não encontrado"));
+            // Configuração de Volumes
+            musica.volume = 0.18; // 18%
+            vIntro.volume = 1.0;  // 100%
             
-            // Inicia o vídeo (com muted ele sempre vai rodar)
-            vIntro.play().catch(e => console.log("Erro ao rodar vídeo"));
+            // Toca a música
+            musica.play().catch(e => console.log("Erro áudio:", e));
+            
+            // Toca o vídeo e tira o mudo após o play para o navegador permitir
+            vIntro.muted = false; 
+            vIntro.play().catch(e => {
+                console.log("Erro vídeo:", e);
+                // Se o navegador ainda bloquear com som, ele tenta rodar mudo
+                vIntro.muted = true;
+                vIntro.play();
+            });
 
             document.getElementById('startScreen').classList.add('fade-out');
             document.getElementById('soundAlert').style.display = 'none';
-            
-            // Mostra os selos
             selos.forEach(s => s.style.display = 'block');
 
             setTimeout(() => {
@@ -196,19 +201,25 @@
 
         function mostrarPresentes() {
             screenConvite.style.display = 'none';
-            screenPresentes.classList.remove('fade-out');
             screenPresentes.classList.add('fade-in');
         }
 
         function voltar() {
-            screenPresentes.style.display = 'none';
             screenPresentes.classList.remove('fade-in');
+            screenPresentes.style.display = 'none';
             screenConvite.style.display = 'block';
             screenConvite.style.opacity = '1';
         }
 
-        function abrirMapa() { window.open("https://www.google.com/maps"); } // Ajuste o link real aqui
-        function confirmar() { window.open("https://wa.link/fmhy6a"); }
+        // --- LINKS DOS BOTÕES ---
+        function abrirMapa() { 
+            // Substitua o link abaixo pelo link do local da festa
+            window.open("https://maps.app.goo.gl/YfF6vR6ZpWvK8", "_blank"); 
+        }
+        
+        function confirmar() { 
+            window.open("https://wa.link/fmhy6a", "_blank"); 
+        }
         
     </script>
 </body>
