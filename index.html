@@ -107,25 +107,10 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-       /* --- BOTÕES TELA CONVITE (AJUSTADOS PARA BAIXO) --- */
-        .pos-confirmar { 
-            width: 17.53%; 
-            height: 9.86%; 
-            left: 23.64%; 
-            top: 66%; /* Antes era 63.49% */
-        }
-        .pos-mapa { 
-            width: 17.53%; 
-            height: 9.86%; 
-            left: 41.84%; 
-            top: 66%; /* Antes era 63.49% */
-        }
-        .pos-presentes { 
-            width: 17.53%; 
-            height: 9.86%; 
-            left: 60.04%; 
-            top: 66%; /* Antes era 63.49% */
-        }
+        /* --- BOTÕES TELA CONVITE (AJUSTADOS 66%) --- */
+        .pos-confirmar { width: 17.53%; height: 9.86%; left: 23.64%; top: 66%; }
+        .pos-mapa { width: 17.53%; height: 9.86%; left: 41.84%; top: 66%; }
+        .pos-presentes { width: 17.53%; height: 9.86%; left: 60.04%; top: 66%; }
 
         /* --- BOTÃO VOLTAR --- */
         .pos-voltar { width: 15.00%; height: 6.07%; left: 20.88%; top: 51.60%; }
@@ -165,16 +150,14 @@
         const screenPresentes = document.getElementById('screenPresentes');
 
         function iniciar() {
-            musica.volume = 0.18;
-            vIntro.volume = 1.0; 
+            // Música em 100% de volume
+            musica.volume = 1.0; 
             
+            // Inicia a música
             musica.play().catch(e => console.log("Áudio aguardando..."));
             
-            vIntro.muted = false; 
-            vIntro.play().catch(e => {
-                vIntro.muted = true;
-                vIntro.play();
-            });
+            // Inicia o vídeo (mantido mudo conforme solicitado)
+            vIntro.play().catch(e => console.log("Erro ao rodar vídeo mudo."));
 
             document.getElementById('startScreen').classList.add('fade-out');
             document.getElementById('soundAlert').style.display = 'none';
